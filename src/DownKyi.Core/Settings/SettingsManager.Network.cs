@@ -17,7 +17,8 @@ namespace DownKyi.Core.Settings
         private readonly Downloader downloader = Downloader.ARIA;
 
         // 最大同时下载数(任务数)
-        private readonly int maxCurrentDownloads = 3;
+        // private readonly int maxCurrentDownloads = 3;
+        private readonly int maxCurrentDownloads = 1;
 
         // 单文件最大线程数
         private readonly int split = 8;
@@ -40,7 +41,8 @@ namespace DownKyi.Core.Settings
         private readonly AriaConfigLogLevel ariaLogLevel = AriaConfigLogLevel.INFO;
 
         // Aria单文件最大线程数
-        private readonly int ariaSplit = 5;
+        // private readonly int ariaSplit = 5;
+        private readonly int ariaSplit = 1;
 
         // Aria下载速度限制
         private readonly int ariaMaxOverallDownloadLimit = 0;

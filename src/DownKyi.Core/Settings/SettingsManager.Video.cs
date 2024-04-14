@@ -12,10 +12,12 @@ namespace DownKyi.Core.Settings
         private readonly int videoCodecs = 7;
 
         // 设置优先下载画质
-        private readonly int quality = 120;
+        // private readonly int quality = 120;
+        private readonly int quality = 80;
 
         // 设置优先下载音质
-        private readonly int audioQuality = 30280;
+        // private readonly int audioQuality = 30280;
+        private readonly int audioQuality = 30232;
 
         // 是否下载flv视频后转码为mp4
         private readonly AllowStatus isTranscodingFlvToMp4 = AllowStatus.YES;
@@ -27,7 +29,8 @@ namespace DownKyi.Core.Settings
         private readonly List<string> historyVideoRootPaths = new List<string>();
 
         // 是否使用默认下载目录，如果是，则每次点击下载选中项时不再询问下载目录
-        private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.NO;
+        // private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.NO;
+        private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.YES;
 
         // 下载内容
         private readonly VideoContentSettings videoContent = new VideoContentSettings();
@@ -35,17 +38,25 @@ namespace DownKyi.Core.Settings
         // 文件命名格式
         private readonly List<FileNamePart> fileNameParts = new List<FileNamePart>
         {
+            // FileNamePart.MAIN_TITLE,
+            // FileNamePart.SLASH,
+            // FileNamePart.SECTION,
+            // FileNamePart.SLASH,
+            // FileNamePart.ORDER,
+            // FileNamePart.HYPHEN,
+            // FileNamePart.PAGE_TITLE,
+            // FileNamePart.HYPHEN,
+            // FileNamePart.VIDEO_QUALITY,
+            // FileNamePart.HYPHEN,
+            // FileNamePart.VIDEO_CODEC,
+
+            FileNamePart.UP_NAME,
+            FileNamePart.SLASH,
             FileNamePart.MAIN_TITLE,
-            FileNamePart.SLASH,
-            FileNamePart.SECTION,
-            FileNamePart.SLASH,
-            FileNamePart.ORDER,
-            FileNamePart.HYPHEN,
-            FileNamePart.PAGE_TITLE,
-            FileNamePart.HYPHEN,
+            FileNamePart.UNDERSCORE,
+            FileNamePart.BVID,
+            FileNamePart.UNDERSCORE,
             FileNamePart.VIDEO_QUALITY,
-            FileNamePart.HYPHEN,
-            FileNamePart.VIDEO_CODEC,
         };
 
         // 文件命名中的时间格式

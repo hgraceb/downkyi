@@ -327,12 +327,19 @@ namespace DownKyi.Services.Download
                     {
                         sectionName = section.Title;
                     }
+                    
+                    // 获取包含分P标题的视频标题
+                    string mainTitle = videoInfoView.Title;
+                    if (section.VideoPages.Count > 1)
+                    {
+                        mainTitle += $" (P{section.VideoPages.IndexOf(page) + 1}. {page.Name})";
+                    }
 
                     // 文件路径
                     List<FileNamePart> fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
                     FileName fileName = FileName.Builder(fileNameParts)
                         .SetSection(Format.FormatFileName(sectionName))
-                        .SetMainTitle(Format.FormatFileName(videoInfoView.Title))
+                        .SetMainTitle(Format.FormatFileName(mainTitle))
                         .SetPageTitle(Format.FormatFileName(page.Name))
                         .SetVideoZone(videoInfoView.VideoZone.Split('>')[0])
                         .SetAudioQuality(page.AudioQualityFormat)

@@ -170,7 +170,11 @@ namespace DownKyi.Services
             foreach (PlayUrlDashVideo video in playUrl.Dash.Video)
             {
                 // 画质id大于设置画质时，跳过
-                if (video.Id > defaultQuality) { continue; }
+                // 部分视频通过 https://api.bilibili.com/x/player/wbi/playurl 接口只能获取到部分清晰度的视频地址，如：https://www.bilibili.com/video/BV1ag4y1B7td/
+                if (video.Id > defaultQuality && playUrl.Dash.Video.Any(v => v.Id <= defaultQuality))
+                {
+                    continue;
+                }
 
                 // 非大会员账户登录时
                 if (!userInfo.IsVip)

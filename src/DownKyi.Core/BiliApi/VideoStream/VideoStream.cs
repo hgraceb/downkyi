@@ -72,7 +72,7 @@ namespace DownKyi.Core.BiliApi.VideoStream
                 try
                 {
                     var subtitleJson = JsonConvert.DeserializeObject<SubtitleJson>(response);
-                    if (subtitleJson == null) { continue; }
+                    if (subtitleJson == null || subtitle.Lan.StartsWith("ai")) { continue; }
 
                     subRipTexts.Add(new SubRipText
                     {

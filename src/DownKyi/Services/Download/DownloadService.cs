@@ -18,12 +18,23 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace DownKyi.Services.Download
 {
+    internal class GZipWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var request = (HttpWebRequest)base.GetWebRequest(address);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            return request;
+        }
+    }
+
     public abstract class DownloadService
     {
         protected string Tag = "DownloadService";
@@ -522,11 +533,26 @@ namespace DownKyi.Services.Download
                     // 暂停
                     Pause(downloading);
 
-                    string outputDanmaku = null;
+                    // string outputDanmaku = null;
+                    // // 如果需要下载弹幕
+                    // if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])
+                    // {
+                    //     outputDanmaku = DownloadDanmaku(downloading);
+                    // }
+
+                    string outputDanmaku = $"{downloading.DownloadBase.FilePath}.xml";
                     // 如果需要下载弹幕
                     if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])
                     {
-                        outputDanmaku = DownloadDanmaku(downloading);
+                        try
+                        {
+                            var xmlUrl = $"http://comment.bilibili.com/{downloading.DownloadBase.Cid}.xml";
+                            new GZipWebClient().DownloadFile(xmlUrl, outputDanmaku);
+                        }
+                        catch (Exception)
+                        {
+                            outputDanmaku = null;
+                        }
                     }
 
                     // 暂停
@@ -547,12 +573,12 @@ namespace DownKyi.Services.Download
                     // 如果需要下载封面
                     if (downloading.DownloadBase.NeedDownloadContent["downloadCover"])
                     {
-                        // page的封面
-                        string pageCoverFileName = $"{downloading.DownloadBase.FilePath}.{GetImageExtension(downloading.DownloadBase.PageCoverUrl)}";
-                        outputPageCover = DownloadCover(downloading, downloading.DownloadBase.PageCoverUrl, pageCoverFileName);
+                        // // page的封面
+                        // string pageCoverFileName = $"{downloading.DownloadBase.FilePath}.{GetImageExtension(downloading.DownloadBase.PageCoverUrl)}";
+                        // outputPageCover = DownloadCover(downloading, downloading.DownloadBase.PageCoverUrl, pageCoverFileName);
 
 
-                        string coverFileName = $"{downloading.DownloadBase.FilePath}.Cover.{GetImageExtension(downloading.DownloadBase.CoverUrl)}";
+                        string coverFileName = $"{downloading.DownloadBase.FilePath}.{GetImageExtension(downloading.DownloadBase.CoverUrl)}";
                         // 封面
                         //outputCover = DownloadCover(downloading, downloading.DownloadBase.CoverUrl, $"{path}/Cover.{GetImageExtension(downloading.DownloadBase.CoverUrl)}");
                         outputCover = DownloadCover(downloading, downloading.DownloadBase.CoverUrl, coverFileName);
@@ -674,7 +700,11 @@ namespace DownKyi.Services.Download
                         DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
                         App.SortDownloadedList(finishedSort);
                     }));
-                    _notifyIcon.ShowBalloonTip(DictionaryResource.GetString("DownloadSuccess"), $"{downloadedItem.DownloadBase.Name}", BalloonIcon.Info);
+                    // _notifyIcon.ShowBalloonTip(DictionaryResource.GetString("DownloadSuccess"), $"{downloadedItem.DownloadBase.Name}", BalloonIcon.Info);
+                    if (downloadingList.Count <= 0)
+                    {
+                        _notifyIcon.ShowBalloonTip(DictionaryResource.GetString("DownloadSuccess"), $"{downloadedList.Count}", BalloonIcon.Info);
+                    }
                 }));
             }
             catch (OperationCanceledException e)
